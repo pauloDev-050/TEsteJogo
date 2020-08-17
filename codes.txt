@@ -1,0 +1,175 @@
+//criado um projeto com o nome GameKeeptest
+//criado uma classe com o nome launch
+package br;
+
+public class launch {
+
+	public static void main(String[] args) {
+		
+		Game game = new Game();
+		game.start();
+	
+	}
+
+}
+
+_________________________________________________________________
+//criado uma classe com o nome game para rodar o jogo 
+package br;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
+import br.display.Display;
+
+public class Game implements Runnable {
+	
+private Display display;
+private Thread thread;	
+private boolean running = false;
+	public Game() {
+		display = new Display("Jogo Teste",400, 300);
+		
+}
+	
+	
+	@Override
+	public void run() {
+//metodo run ira ser executado quando o jogo iniciar
+		init();
+		int FPS = 60;
+		double timePerTick = 1000000000 / 60;
+		double delta = 0;
+		long now;
+		long lastTime  = System.nanoTime();
+		
+		while(running) {
+		
+			now = System.nanoTime();
+			delta += (now - lastTime) / timePerTick;
+			lastTime = now;
+			
+			if (delta >= 1) {
+				update();
+				render();
+				//System.out.println(delta);
+				delta --;
+			}
+			
+				
+			
+	}
+	stop();
+}
+private void init() {
+		
+	}
+
+
+private void update() {
+		
+		
+	}
+
+
+private void render() {
+		// somente ira usar para as imagens 
+		BufferStrategy bs = display.getBufferStrategy();
+		if (bs == null) {
+			display.createBufferStrategy();
+			bs = display.getBufferStrategy();
+		}
+		Graphics g= bs.getDrawGraphics();
+		g.setColor(Color.RED);
+		g.fillRect(10, 10, width, height);
+		
+		g.dispose();
+		bs.show();
+		
+		
+		
+	}
+
+
+public synchronized void start() {
+	if (thread != null) return;
+		thread = new Thread(this);
+	thread.start();
+	running = true;
+}
+public synchronized void stop() {
+	if (thread == null) return;
+	
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+
+}
+}
+
+_________________________________________________________________________
+//criar uma classe do display
+
+package br.display;
+
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.image.BufferStrategy;
+
+import javax.swing.JFrame;
+
+public class Display {
+	
+	private JFrame jframe;
+	private Canvas canvas;
+	public Display(String title, int width, int height) {
+		canvas = new Canvas ();
+		canvas.setPreferredSize(new Dimension(width, height));
+		canvas.setMaximumSize(new Dimension(width, height));
+		canvas.setMinimumSize(new Dimension(width, height));
+		
+		jframe = new JFrame(title);
+		jframe.add(canvas);
+		jframe.pack();
+		
+		
+		jframe.setVisible(true);
+		jframe.setResizable(false);	
+		jframe.setLocationRelativeTo(null);
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+	}
+public BufferStrategy getBufferStrategy() {
+	return canvas.getBufferStrategy();
+}
+public void createBufferStrategy() {
+}
+	canvas.createBufferStrategy(2);
+
+}
+
+
+//criado uma interface para o jogo
+package br;
+
+public interface state {
+	void init();
+	void update();
+	void render(Graphics g);
+}
+
+//criado uma classe para a interface
+
+package br.state;
+
+public class stateManager {
+public static final int numberStates = 2;
+public static State[] states = new State[numberStates];
+public static 
+}
+
+
